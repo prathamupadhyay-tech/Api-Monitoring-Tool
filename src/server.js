@@ -22,7 +22,7 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(errorHandler);
+
 app.use((req,res , next)=>{
     logger.info(`${req.method} ${req.path}`,{
         ip: req.ip,
@@ -36,14 +36,14 @@ app.get("/health" , (req,res)=>{
     res.status(200).json(
         ResponseFormatter.success({
             status:'healthy',
-            timestamp:new Date().toISOString,
+            timestamp:new Date().toISOString(),
             uptime:process.uptime(),
         },
     'service is healthy')
     )
 })
 
-app.use("/" , (req,res)=>{
+app.get("/" , (req,res)=>{
      res.status(200).json(
         ResponseFormatter.success({
             service:'API Hit Monitoring System',
@@ -70,7 +70,7 @@ app.use((req,res)=>{
     res.status(404).json(ResponseFormatter.error("Endpoint not found" , 404));
 })
 
-
+app.use(errorHandler);
 async function initialzeConnection(){
     try {
         logger.info("Initializing database connection ...");
@@ -91,7 +91,7 @@ async function initialzeConnection(){
 async function startServer(){
     try {
         await initialzeConnection();
-        const server = app.listen(config.port,()=>{
+        const server = app.listen(config.port,"0.0.0.0",()=>{
             logger.info(`Server started on port ${config.port}`);
             logger.info(`Environment: ${config.node_env}`);
             logger.info(`API available at: http://localhost:${config.port}`);

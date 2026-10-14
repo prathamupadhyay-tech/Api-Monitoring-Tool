@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import config from "./index";
-import logger from "./logger";
+import config from "./index.js";
+import logger from "./logger.js";
 import pg from "pg";
 
 const {Pool} = pg;
@@ -37,12 +37,12 @@ class PostgresConnection{
         try {
             const pool = this.getPool();
             const client = await pool.connect();
-            const result = await client.query("SELECT NOW");
+            const result = await client.query("SELECT NOW()");
             client.release();
-            logger.info(`PG connected successfully at ${result.row[0].now} `)
+            logger.info(`PG connected successfully at ${result.rows[0].now} `)
         } catch (error) {
             logger.error("failed to connect to PG" , error)
-            throw err
+            throw error
         }
     }
 

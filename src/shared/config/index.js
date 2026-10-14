@@ -26,7 +26,7 @@ const config = {
         queue: process.env.RABBITMQ_QUEUE || 'api_hits',
         publisherConfirms: process.env.RABBITMQ_PUBLISHER_CONFIRMS === 'true' || false,
         retryAttempts: parseInt(process.env.RABBITMQ_RETRY_ATTEMPTS || '3' , 10),
-        retryDelays: parent(process.env.RABBITMQ_RETRY_DELAY || '1000' , 10),
+        retryDelays: parseInt(process.env.RABBITMQ_RETRY_DELAY || '1000' , 10),
     },
 
     jwt: {
